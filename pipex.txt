@@ -1,0 +1,139 @@
+ *processes*
+
+ what is a process?
+ a program is just a file on the disk
+ -> a process is that program while its running
+ when running a command like pwd , linux creates a new process to execute it
+ each process has :
+ 1.its own memory 2.its own execution state 3.system resources given by the os
+
+ process id 
+ every process has a unique pid
+ linux uses pid to track and manage processes
+ no two RUNNING processes can share the same pid
+
+ foreground processes :
+ runs attached to the terminal , receives keyboard input , blocks the terminal until it finishes
+ background processes :
+ runs independently of the terminal, doesnt receive keyboard input
+ - whats the purpose of foreground vs background?
+ the problem linux is facing : one terminal and one keyboard
+ linux must decide , which process is allowed to listen to your keyboard,which process is allowwed to control the terminal
+ foreground process = full control of the terminal
+ when we use background process? when a program takes a long time , doesnt need you typing
+
+1.proecss creation : each command runs its own process , pipex runs multiple commands/processes at once
+2.parent and chile relationship : pipex creates child processes , the parent coordinates everything
+3.each command has its own pid , parent must track children
+-> pids used when waiting and cleaning processes
+4.zombie process : doesnt wait for children , exits too early
+
+why multiple processes are needed?
+because each command must run independently at the same time
+
+buffering in OS 
+a temporary area in memory used to hold data while it is being transferred from one place to another
+when you create a pipe : 
+the kernel allocates a buffer , writer writes bytes into buffer , reader reads bytes from that buffer
+“Buffer” is a purpose, not a location.
+
+*pipe() system call*
+a pipe is a temporary memory buffer created by the kernel that allows one process to send data to another process
+a pipe is a connection between two processes , such that the standart output form one process becomes the standard input of the other process
+pipes are useful for communication between related processes(inter-process communication)
+
+inter-process communication :?
+
+file descriptor is simply an index into the file descriptor table
+for each process in our os , there is a process control block (pcb) , pcb keeps track of the context of the process
+file descriptor is allocated with open system call , generally used for the application that do frequently random acces of file
+file descriptor isnt buffered, used to identify an opened file
+
+input/output redirection in linux
+redirection is a method of controlling where the input and output of commands go
+
+Pipex is a project that teaches how Unix shells connect programs together using pipes, file descriptors, and processes — without relying on the shell itself.
+a pipe is a from of redirection in linux used to connect the STDOUT of one command into the STDIN of a second command. 
+
+
+file descriptors -> processes deal with file descriptors only
+this explains why programs dont know where input comes from , why redirection works without changing the program
+-> every process has its own file descriptor  , redirecting fd 1 in one process doesnt affect another process
+each pipex child can have different input/output
+0,1,2 -> standard streams
+3,4,5,.. -> used for files , pipes , etc.
+
+program are blind to redirection , each stream has no idea where the data comes from or goes to
+meaning -> program always reads from 0 and writes to 1
+so , pipex works by changing what fd 0 and 1 point to , not the program
+
+
+DATA FLOW
+when we run commands in the terminal , 
+any input and output need to be handled. 
+the process that gets created for each command needs to know what data to take in as input and what data to output
+each command's process also needs to know where to send and receive such date 
+
+-> there are two meaning of "input"
+meaning 1 -> from the shell's perspective -> everything you type is input -> grep hello file.txt
+meaning 2 (the one that matters for pipex)
+input from the process's perspective -> input means data read from a file descriptor , usually stdin (fd 0)
+this data can come from keyboard , file , pipe
+
+-> command line arguments arent STDIN, options and arguments are bassed before the program starts , they arent read from stdin
+example -> ls -l , -l isnt input
+what count as "real input"?(for pipex definition)
+input is data that is read from tdin , this includes typing text into keyboard , redirecting a file into stdin , reading from a pipe
+
+file arguments vs file input
+
+case 1 : file passed as argument -> sort file.txt
+case 2: File passed but NOT read -> mv file1 file2
+
+INTRODUCING PIPES 
+pipes allow data from one process to be passed to another , so that command can be chained together "by their streams"
+this allows commands to work together
+this chaining can be represented by a pipeline: commands in a pipeline are connected via pipes , where data is shared between processes by flowing from one end of the pipe to the other
+since each command in the pipeline is run in a separate process , each with a separate memory space , we need a way to allow those processes to communicate with each other. this is the behaviour that the pipe() system call provides
+pipes are just buffered streams that are assiciated with 2 file descriptors that are set up so that the first one can read in data that is written to the second one
+in the code written to handle the execution of commands in a pipeline , an array of two integer is created and a pipe() call populates the array with two available file descriptors such that the firsrt file descriptor in the array can read in data written to the second
+example : sort | grep ea
+sort command waits for input from the user via stdin (fd 0) ,next the strings are sorted and sent via stdout which is fed into the pipe
+it does this by allowing stdout to feed data to the left end of the pipe(fd 4) insted of to the terminal
+very important note: the fds in the array are set up so that what is written to 4 can be read from 3 , so you might be wondering why 4 is shown of the left side of the pipe and 3 is on the right.
+the key thing to understand is that the read and write actions defined by a pipe() call from the perspective of the two processes using the pipe , not the pipe itself.
+./pipex infile cmd1 cmd2 outfile
+is equivalent to cmd < infile | cmd2 > outfile
+the goal is : cmd1 reads from infile , sends its output through a pipe , cmd2 reads from that pipe and writes it to outfile
+pipe(fd[2]) -> this creates one pipe , fd[0] read end , fd[1] write end
+at this moment : parent process (pipex) owns both ends , nothing is connected yet
+first fork -> child process 1 
+second fork -> child process 2
+now we have 3 total processes : parent / child 1 / child 2
+initially all fd tables are identical copies
+cmd1 < infile : child process 1
+this is writer , not a reader , so here we close the child fd[0] 
+infile -> open() , kernel gives a new fd (say fd 3)
+dup2(infile,0) -> it means replace stdin(fd 0) with infile
+now for child 1 process -> fd 0 = infile
+so when cmd1 reads from stdin , it actually reads from infile
+close(infile) after dup2
+dup(fd[1],1) -> this connects stdout -> pipe write end
+this means : everything i print goes into the pipe
+close fd[1]
+execve(cmd1) -> cmd1 reads from fd 0(infile)
+		cmd1 writes to fd 1(pipe write end)
+		
+cmd2 > outfile : child process 2
+child 2 will not write to the pipe , so we close the write end 
+close (fd[1])
+outfile -> open(), kernel gives it a new fd
+dup2(outfile , 1) -> replace stdout(fd 1) with outfile -> (fd 1 -> outfile)
+close(outfile)
+dup2(fd[0],0) -> replace stdin (fd 0) with pipe read end
+meaning : my input comes from the pipe
+close (fd[0])
+execve(cmd2) -> reads from pipe , writes to outfile
+key points : cmd1 pushes data into the pipe , cmd2 pulls data from the pipe , kernel buffer sits in the middle , neither command knows about the other
+
+One final sentence : pipex creates a pipe and two child processes; the first child redirects stdin to the infile and stdout to the pipe's write end , the second child redirects stdin to the pipe's read end and stdout to the outfile ,both children execute their commands while the parent 
