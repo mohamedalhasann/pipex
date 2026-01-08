@@ -82,7 +82,7 @@ this data can come from keyboard , file , pipe
 
 -> command line arguments arent STDIN, options and arguments are bassed before the program starts , they arent read from stdin
 example -> ls -l , -l isnt input
-what count as "real input"?(for pipex definition)
+what count as "real input"?(for pipex definition)>>>
 input is data that is read from tdin , this includes typing text into keyboard , redirecting a file into stdin , reading from a pipe
 
 file arguments vs file input
@@ -137,3 +137,8 @@ execve(cmd2) -> reads from pipe , writes to outfile
 key points : cmd1 pushes data into the pipe , cmd2 pulls data from the pipe , kernel buffer sits in the middle , neither command knows about the other
 
 One final sentence : pipex creates a pipe and two child processes; the first child redirects stdin to the infile and stdout to the pipe's write end , the second child redirects stdin to the pipe's read end and stdout to the outfile ,both children execute their commands while the parent 
+
+execve() function -> replaces the currently running process with a new program
+first parameter : path to the executable file -> /bin/ls
+second parameter : the argument list passed to the program
+third parameter : envp (needed by the program begin executed)

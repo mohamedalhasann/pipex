@@ -1,16 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/07 14:35:29 by malhassa         ###   ########.fr       */
+/*   Created: 2026/01/08 14:36:22 by malhassa          #+#    #+#             */
+/*   Updated: 2026/01/08 16:39:03 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
+#include "pipex.h"
+
+char	*catch_path(char **envp)
+{
+	char	*str;
+
+	str
+}
+int	command_path()
+{
+	
+}
