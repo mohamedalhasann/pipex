@@ -82,7 +82,7 @@ this data can come from keyboard , file , pipe
 
 -> command line arguments arent STDIN, options and arguments are bassed before the program starts , they arent read from stdin
 example -> ls -l , -l isnt input
-what count as "real input"?(for pipex definition)>>>
+what count as "real input"?(for pipex definition)
 input is data that is read from tdin , this includes typing text into keyboard , redirecting a file into stdin , reading from a pipe
 
 file arguments vs file input
@@ -138,7 +138,37 @@ key points : cmd1 pushes data into the pipe , cmd2 pulls data from the pipe , ke
 
 One final sentence : pipex creates a pipe and two child processes; the first child redirects stdin to the infile and stdout to the pipe's write end , the second child redirects stdin to the pipe's read end and stdout to the outfile ,both children execute their commands while the parent 
 
-execve() function -> replaces the currently running process with a new program
-first parameter : path to the executable file -> /bin/ls
-second parameter : the argument list passed to the program
-third parameter : envp (needed by the program begin executed)
+./pipex infile cmd1 cmd2 outfile
+
+cmd1 < infile
+first command is a writer: it closes the pipe read end,
+redirects stdin to the infile so it can read input,
+and redirects stdout to the pipe write end so its output flows into the pipe.
+
+cmd2 > outfile
+second process is a reader : it closes the pipe write end , 
+redirects stdout to the outfile so its output into the outfile
+and redirects its stdin into pipe read end so it can recieve data from the pipe
+
+at the start, the shell creates the pipex parent process
+the pipex parent process creates a pipe , then forks twice to create a 2 child processes
+each fork is done by the parent process , the first fork creates the child that will run cmd1, the second will create the child that will run cmd2
+the parent process doesnt execute any command , it closes unused pipe ends and waits for both child processes to finish using wait()
+
+after creating the 2 child processes , we need to execute the command
+alright for the first process , cmd1 < infile 
+it will be a function that do this : it closes the pipe read end,
+redirects stdin to the infile so it can read input,
+and redirects stdout to the pipe write end so its output flows into the pipe 
+and also the function will call execve() function to execute the command 
+
+what about execve() function?
+The first parameter of execve() is the path to the executable file,
+the second parameter is argv, which is an array of strings containing the command name and its options (for example {"ls", "-la", NULL}),
+and the third parameter is envp, which contains the environment variables so the program runs in a normal environment
+
+how can we get the path of the executable command? 
+i will creates another function that do this , how i will do that?
+there is a full path in the envp , i will split the path and add /(the command) to it and use the access function and if its correct ill add it to path string and ill returned it
+once i got the path , ill call the execve function and the second and the third will be ready from the input already
+is that all correct?

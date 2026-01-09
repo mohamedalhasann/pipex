@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/09 17:09:43 by mohamed          ###   ########.fr       */
+/*   Created: 2025/08/14 16:53:13 by malhassa          #+#    #+#             */
+/*   Updated: 2025/08/25 18:50:01 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "libft/libft.h"
-#include <sys/wait.h>
+#include "libft.h"
 
-
-
-char *find_full_path(char *envp[]);
-char    *find_command_path(char *path, char *cmd);
+int	ft_isalnum(int c)
+{
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+		return (1);
+	else if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
+}

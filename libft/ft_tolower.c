@@ -1,22 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/09 17:09:43 by mohamed          ###   ########.fr       */
+/*   Created: 2025/08/14 16:58:57 by malhassa          #+#    #+#             */
+/*   Updated: 2025/08/25 18:59:00 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "libft/libft.h"
-#include <sys/wait.h>
+#include "libft.h"
 
-
-
-char *find_full_path(char *envp[]);
-char    *find_command_path(char *path, char *cmd);
+int	ft_tolower(int c)
+{
+	if (c >= 65 && c <= 90)
+		return (c + 32);
+	return (c);
+}

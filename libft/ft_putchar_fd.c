@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/09 17:09:43 by mohamed          ###   ########.fr       */
+/*   Created: 2025/08/21 14:57:18 by malhassa          #+#    #+#             */
+/*   Updated: 2025/08/22 00:41:09 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "libft/libft.h"
-#include <sys/wait.h>
+#include "libft.h"
 
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
 
+// int main(void)
+// {
+//     int fdd = open("testtt3.txt",O_CREAT | O_WRONLY | O_TRUNC,0664);
 
-char *find_full_path(char *envp[]);
-char    *find_command_path(char *path, char *cmd);
+// }

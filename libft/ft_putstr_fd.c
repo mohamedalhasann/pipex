@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/09 17:09:43 by mohamed          ###   ########.fr       */
+/*   Created: 2025/08/21 23:34:51 by malhassa          #+#    #+#             */
+/*   Updated: 2025/08/22 00:27:27 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "libft/libft.h"
-#include <sys/wait.h>
+#include "libft.h"
 
+void	ft_putstr_fd(char *s, int fd)
+{
+	int	i;
 
+	i = 0;
+	while (s[i])
+		write(fd, &s[i++], 1);
+}
 
-char *find_full_path(char *envp[]);
-char    *find_command_path(char *path, char *cmd);
+// int main(void)
+// {
+//     ft_putstr_fd("mohamed\n",2);
+// }

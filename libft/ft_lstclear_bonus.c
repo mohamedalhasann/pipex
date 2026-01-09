@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_path.c                                        :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/08 14:36:22 by malhassa          #+#    #+#             */
-/*   Updated: 2026/01/08 16:39:03 by malhassa         ###   ########.fr       */
+/*   Created: 2025/08/27 00:49:26 by malhassa          #+#    #+#             */
+/*   Updated: 2025/08/27 13:44:35 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "libft.h"
 
-char	*catch_path(char **envp)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	char	*str;
+	t_list	*temp;
+	t_list	*temp2;
 
-	str
-}
-int	command_path()
-{
-	
+	temp = *lst;
+	if (!(*lst) || !del)
+		return ;
+	while (temp)
+	{
+		del(temp->content);
+		temp2 = temp->next;
+		free(temp);
+		temp = temp2;
+	}
+	*lst = NULL;
 }
