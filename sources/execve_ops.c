@@ -6,77 +6,75 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 15:28:12 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/10 16:12:10 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/10 18:10:43 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-char *find_full_path(char *envp[])
-{
-    int i;
+char *find_full_path(char *envp[]) {
+  int i;
 
-    i = 0;
-    while(envp[i])
-    {
-        if (!ft_strncmp(envp[i],"PATH=",5))
-            return (envp[i] + 5);
-        i++;
-    }
+  i = 0;
+  while (envp[i]) {
+    if (!ft_strncmp(envp[i], "PATH=", 5))
+      return (envp[i] + 5);
+    i++;
+  }
+  return (NULL);
+}
+void free_2d(char **str) {
+  if (!str)
+    return;
+  int i;
+
+  i = 0;
+  while (str[i]) {
+    free(str[i]);
+    i++;
+  }
+  free(str);
+}
+
+char *access_checker(char **str, char *cmd) {
+  char *tmp;
+  char *temp;
+  int i;
+
+  i = 0;
+  while (str[i]) {
+    tmp = ft_strjoin(str[i], "/");
+    if (!tmp)
+      return (NULL);
+    temp = ft_strjoin(tmp, cmd);
+    free(tmp);
+    if (!temp)
+      return (NULL);
+    if (!access(temp, X_OK))
+      return (temp);
+    free(temp);
+    i++;
+  }
+  return (NULL);
+}
+
+char *find_command_path(char *path, char *cmd) {
+  char **str;
+  char *temp;
+
+  if (!path || !cmd)
     return (NULL);
-}
-void    free_2d(char **str)
-{
-    int i;
-
-    i = 0;
-    while(str[i])
-    {
-        free(str[i]);
-        i++;
-    }
-    free(str);
-}
-
-char    *find_command_path(char *path, char *cmd)
-{
-    char    **str;
-    char    *temp;
-    char    *tmp;
-    int     i;
-
-    if (ft_strchr(cmd,'/'))
-    {
-        if (!access(cmd,X_OK))
-            return (ft_strdup(cmd));
-        else
-            return (NULL);
-    }
-    str = ft_split(path, ':');
-    temp = NULL;
-    i = 0;
-    while (str[i])
-    {
-        tmp = ft_strjoin(str[i], "/");
-        temp = ft_strjoin(tmp, cmd);
-        free(tmp);
-        if (!access(temp, X_OK))
-        {
-            free_2d(str);
-            return (temp);
-        }
-        free(temp);
-        i++;
-    }
-    free_2d(str);
+  if (ft_strchr(cmd, '/')) {
+    if (!access(cmd, X_OK))
+      return (ft_strdup(cmd));
     return (NULL);
+  }
+  str = ft_split(path, ':');
+  if (!str)
+    return (NULL);
+  temp = access_checker(str, cmd);
+  free_2d(str);
+  if (!temp)
+    return (NULL);
+  return (temp);
 }
-
-
-// int main(int argc , char **argv , char **envp)
-// {
-//     char    *str = find_full_path(envp);
-//     str = find_command_path(str,"ls");
-//     printf("%s",str);
-//     free(str);
-// }

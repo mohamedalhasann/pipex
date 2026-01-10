@@ -6,14 +6,16 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/10 16:20:13 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/10 19:05:07 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <errno.h>
 #include "libft/libft.h"
 typedef struct s_pid
 {
@@ -32,3 +34,5 @@ void    free_2d(char **str);
 void execve_handle(char *path , char **cmd_args);
 void    first_process(t_pid data, char *infile, char *cmd1,char **envp);
 void    second_process(t_pid data, char *outfile ,char *cmd2, char **envp);
+void    fork_error(t_pid data);
+void second_fork_error(t_pid data);
