@@ -6,11 +6,11 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 15:28:12 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/09 17:05:40 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/10 16:12:10 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../pipex.h"
 
 char *find_full_path(char *envp[])
 {

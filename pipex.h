@@ -6,17 +6,29 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 18:04:43 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/09 17:09:43 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/10 16:20:13 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "libft/libft.h"
 #include <sys/wait.h>
+#include "libft/libft.h"
+typedef struct s_pid
+{
+    char    *envp_path;
+	char	*path1;
+	char	*path2;
+	int	pid1;
+	int pid2;
+	int fd[2];
+}	t_pid;
 
-
-
+void print_exit(char *message, int exit_value);
 char *find_full_path(char *envp[]);
 char    *find_command_path(char *path, char *cmd);
+void    free_2d(char **str);
+void execve_handle(char *path , char **cmd_args);
+void    first_process(t_pid data, char *infile, char *cmd1,char **envp);
+void    second_process(t_pid data, char *outfile ,char *cmd2, char **envp);
