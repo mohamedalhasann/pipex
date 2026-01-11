@@ -6,12 +6,13 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 14:50:29 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/10 20:19:51 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 16:46:45 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-char *path_handle(char *env_path, char **cmd_args) {
+char *path_handle(char *env_path, char **cmd_args)
+{
   char *path;
 
   path = find_command_path(env_path, cmd_args[0]);
@@ -22,7 +23,8 @@ char *path_handle(char *env_path, char **cmd_args) {
   }
   return (path);
 }
-void first_process(t_pid data, char *infile, char *cmd1, char **envp) {
+void first_process(t_pid data, char *infile, char *cmd1, char **envp)
+{
   int infile_fd;
   char **cmd1_args;
 
@@ -43,11 +45,11 @@ void first_process(t_pid data, char *infile, char *cmd1, char **envp) {
     print_exit("malloc failed", 1);
   data.path1 = path_handle(data.envp_path, cmd1_args);
   execve(data.path1, cmd1_args, envp);
-  ;
   execve_handle(data.path1, cmd1_args);
 }
 
-void second_process(t_pid data, char *outfile, char *cmd2, char **envp) {
+void second_process(t_pid data, char *outfile, char *cmd2, char **envp)
+{
   int outfile_fd;
   char **cmd2_args;
 
@@ -70,3 +72,4 @@ void second_process(t_pid data, char *outfile, char *cmd2, char **envp) {
   execve(data.path2, cmd2_args, envp);
   execve_handle(data.path2, cmd2_args);
 }
+  

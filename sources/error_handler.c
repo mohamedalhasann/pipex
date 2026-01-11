@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 14:09:47 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/10 22:20:16 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 16:19:25 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ void execve_handle(char *path, char **cmd_args)
 }
 void fork_error(t_pid data) 
 {
-  if (data.fd[0] > 0)
+  if (data.fd[0] >= 0)
     close(data.fd[0]);
-  if (data.fd[1] > 0)
+  if (data.fd[1] >= 0)
     close(data.fd[1]);
   print_exit("fork error", 1);
 }
