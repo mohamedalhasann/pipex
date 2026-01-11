@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 14:50:29 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/11 16:46:45 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 18:22:13 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,18 @@ void first_process(t_pid data, char *infile, char *cmd1, char **envp)
   if (infile_fd < 0)
     print_exit("failed to open a file", 1);
   if (dup2(infile_fd, 0) == -1)
-    print_exit("dup2 failed\n", 1);
+    print_exit("dup2 failed", 1);
   if (close(infile_fd) == -1)
-    print_exit("close failed\n", 1);
+    print_exit("close failed", 1);
   if (dup2(data.fd[1], 1) == -1)
-    print_exit("dup2 failed\n", 1);
+    print_exit("dup2 failed", 1);
   if (close(data.fd[1]) == -1)
-    print_exit("close failed\n", 1);
+    print_exit("close failed", 1);
   cmd1_args = ft_split(cmd1, ' ');
   if (!cmd1_args)
     print_exit("malloc failed", 1);
-  data.path1 = path_handle(data.envp_path, cmd1_args);
   execve(data.path1, cmd1_args, envp);
-  execve_handle(data.path1, cmd1_args);
+  execve_handle(cmd1_args);
 }
 
 void second_process(t_pid data, char *outfile, char *cmd2, char **envp)
@@ -58,18 +57,17 @@ void second_process(t_pid data, char *outfile, char *cmd2, char **envp)
   if (outfile_fd < 0)
     print_exit("failed to open a file\n", 1);
   if (dup2(outfile_fd, 1) == -1)
-    print_exit("dup2 failed\n", 1);
+    print_exit("dup2 failed", 1);
   if (close(outfile_fd) == -1)
-    print_exit("close failed\n", 1);
+    print_exit("close failed", 1);
   if (dup2(data.fd[0], 0) == -1)
-    print_exit("dup2 failed\n", 1);
+    print_exit("dup2 failed", 1);
   if (close(data.fd[0]) == -1)
-    print_exit("close failed\n", 1);
+    print_exit("close failed", 1);
   cmd2_args = ft_split(cmd2, ' ');
   if (!cmd2_args)
     print_exit("malloc failed\n", 1);
-  data.path2 = path_handle(data.envp_path, cmd2_args);
   execve(data.path2, cmd2_args, envp);
-  execve_handle(data.path2, cmd2_args);
+  execve_handle(cmd2_args);
 }
   
