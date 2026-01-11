@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 15:28:12 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/10 18:10:43 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 17:56:51 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ char *find_command_path(char *path, char *cmd) {
 
   if (!path || !cmd)
     return (NULL);
-  if (ft_strchr(cmd, '/')) {
+  if (ft_strchr(cmd, '/'))
+  {
     if (!access(cmd, X_OK))
       return (ft_strdup(cmd));
     return (NULL);

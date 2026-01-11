@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 18:04:25 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/11 16:51:12 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 18:26:11 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int last_operation(t_pid data)
     
     close(data.fd[0]);
     close(data.fd[1]);
+    free(data.path1);
+    free(data.path2);
     waitpid(data.pid1, &status1, 0);
     waitpid(data.pid2, &status2, 0);
     if (WIFEXITED(status2))
@@ -26,28 +28,36 @@ int last_operation(t_pid data)
     return (1);
 }
 
-void before_fork(int argc, t_pid *data, char **argv, char **envp)
+void before_fork(int argc, t_pid *data, char **argv,char **envp)
 {
+    
     if (argc != 5)
         print_exit("wrong input format", 1);
-
     if (pipe(data->fd) == -1)
         print_exit("pipe error", 1);
-
     data->envp_path = find_full_path(envp);
     if (!data->envp_path)
         print_exit("envp path not found", 1);
-    if (!find_command_path(data->envp_path, argv[2]))
-        print_exit("command not found", 1);
-    if (!find_command_path(data->envp_path, argv[3]))
-        print_exit("command not found", 1);
+    data->path1 = find_command_path(data->envp_path, argv[2]);
+    data->path2 = find_command_path(data->envp_path, argv[3]);
+    if (!data->path1 || !data->path2)
+    {
+        ft_putendl_fd("command not found", 2);
+        if (data->path2)
+            free(data->path2);
+        else if (data->path1)
+            free(data->path1);
+        else
+              ft_putendl_fd("command not found", 2);
+        exit(127);
+    }
 }
 
 int main(int argc, char **argv, char **envp)
 {
     t_pid  data;
 
-    before_fork(argc, &data, argv, envp);
+    before_fork(argc, &data,argv,  envp);
     data.pid1 = fork();
     if (data.pid1 == -1)
         fork_error(data);
