@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 15:28:12 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/11 17:56:51 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 20:20:07 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ char *access_checker(char **str, char *cmd) {
   return (NULL);
 }
 
-char *find_command_path(char *path, char *cmd) {
+char *find_command_path(char *path, char *cmd)
+{
   char **str;
   char *temp;
 

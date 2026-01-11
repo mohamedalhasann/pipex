@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 18:04:25 by mohamed           #+#    #+#             */
-/*   Updated: 2026/01/11 18:26:11 by mohamed          ###   ########.fr       */
+/*   Updated: 2026/01/11 20:17:42 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int last_operation(t_pid data)
 
 void before_fork(int argc, t_pid *data, char **argv,char **envp)
 {
-    
     if (argc != 5)
         print_exit("wrong input format", 1);
     if (pipe(data->fd) == -1)
